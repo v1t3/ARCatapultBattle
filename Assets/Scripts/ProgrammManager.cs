@@ -60,6 +60,12 @@ public class ProgrammManager : MonoBehaviour
         {
             MaketShell.SetActive(!Recharging);
         }
+
+        //Quit app on Back
+        if (Input.GetKey("escape"))
+        {
+            Application.Quit();
+        }
     }
 
     void ShowMarkerAndSetObject()

@@ -11,6 +11,10 @@ public class ChooseObject : MonoBehaviour
 
     public GameObject ChoosedObject;
 
+    private int objectCount;
+    [Header("Максимальное число элементов данного типа")]
+    public int objectMax;
+
     void Start()
     {
         ProgrammManagerScript = FindObjectOfType<ProgrammManager>();
@@ -21,8 +25,12 @@ public class ChooseObject : MonoBehaviour
 
     void ChooseObjectFunction()
     {
-        ProgrammManagerScript.ObjectToSpawn = ChoosedObject;
-        ProgrammManagerScript.ChooseObject = true;
-        ProgrammManagerScript.ScrollView.SetActive(false);
+        if (0 == objectMax || (0 < objectMax && objectCount < objectMax))
+        {
+            ProgrammManagerScript.ObjectToSpawn = ChoosedObject;
+            ProgrammManagerScript.ChooseObject = true;
+            ProgrammManagerScript.ScrollView.SetActive(false);
+            objectCount++;
+        }
     }
 }
