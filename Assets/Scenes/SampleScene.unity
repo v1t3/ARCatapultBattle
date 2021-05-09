@@ -297,8 +297,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -940.2, y: -159.4}
-  m_SizeDelta: {x: 32.25, y: 250}
+  m_AnchoredPosition: {x: -997.7, y: -252.8}
+  m_SizeDelta: {x: 32.25, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &160551529
 MonoBehaviour:
@@ -344,8 +344,8 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1902218780}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.2
-  m_NumberOfSteps: 0
+  m_Size: 0.1
+  m_NumberOfSteps: 10
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2113,8 +2113,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 482218c84846e0c42a66daf63a55850d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlaneMarkerPrefab: {fileID: 6301872980743478545, guid: 8057b353255047e498bc35fb431556c2,
-    type: 3}
   ObjectToSpawn: {fileID: 8756338868451426143, guid: b0e87626bbd84764eb34ee5d057200d2,
     type: 3}
   ScrollView: {fileID: 1673465392}

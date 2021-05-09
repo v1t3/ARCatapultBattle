@@ -9,13 +9,11 @@ public class ProgrammManager : MonoBehaviour
     private ARRaycastManager ARRaycastManagerScript;
     List<ARRaycastHit> hits = new List<ARRaycastHit>();
 
-    [Header("Put your planeMarker here")]
-    [SerializeField] private GameObject PlaneMarkerPrefab;
     public GameObject ObjectToSpawn;
     [Header("Put ScrollView here")]
     public GameObject ScrollView;
     private GameObject SelectedObject;
-    [SerializeField] GameObject MaketShell;
+    private GameObject MaketShell;
     [SerializeField] private GameObject EndText;
 
     [SerializeField] private Camera ARCamera;
@@ -36,7 +34,6 @@ public class ProgrammManager : MonoBehaviour
     {
         ARRaycastManagerScript = FindObjectOfType<ARRaycastManager>();
 
-        PlaneMarkerPrefab.SetActive(false);
         ScrollView.SetActive(false);
         EndText.SetActive(false);
     }
@@ -46,7 +43,7 @@ public class ProgrammManager : MonoBehaviour
     {
         if (ChooseObject)
         {
-            ShowMarkerAndSetObject();
+            SetObject();
         }
 
         if (Strikes > 2)
@@ -68,25 +65,18 @@ public class ProgrammManager : MonoBehaviour
         }
     }
 
-    void ShowMarkerAndSetObject()
+    void SetObject()
     {
         List<ARRaycastHit> hits = new List<ARRaycastHit>();
 
         ARRaycastManagerScript.Raycast(new Vector2(Screen.width / 2, Screen.height / 2), hits, TrackableType.Planes);
 
-        // show marker
-        if (hits.Count > 0)
-        {
-            PlaneMarkerPrefab.transform.position = hits[0].pose.position;
-            PlaneMarkerPrefab.SetActive(true);
-        }
         // set object
         if (Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began)
         {
             Instantiate(ObjectToSpawn, hits[0].pose.position, ObjectToSpawn.transform.rotation);
-            MaketShell = GameObject.Find("MaketShell");
+            MaketShell = GameObject.Find("Shell");
             ChooseObject = false;
-            PlaneMarkerPrefab.SetActive(false);
         }
     }
 
