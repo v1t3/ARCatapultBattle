@@ -8,7 +8,6 @@ public class FireScript : MonoBehaviour
     private ProgrammManager ProgrammManagerScript;
 
     private Button button;
-    private GameObject Beam;
     private Rigidbody BeamRigidBody;
     public float force;
 
@@ -25,13 +24,17 @@ public class FireScript : MonoBehaviour
     {
         if (0 < ProgrammManagerScript.fireForce)
         {
-            Beam = GameObject.Find("Beam");
-            BeamRigidBody = Beam.GetComponent<Rigidbody>();
+            GameObject Beam = GameObject.Find("Beam");
 
-            if (!ProgrammManagerScript.Recharging && 0 < force)
+            if (Beam)
             {
-                BeamRigidBody.AddForce(BeamRigidBody.transform.up * force, ForceMode.Impulse);
-                ProgrammManagerScript.Recharging = true;
+                BeamRigidBody = Beam.GetComponent<Rigidbody>();
+
+                if (!ProgrammManagerScript.Recharging && 0 < force)
+                {
+                    BeamRigidBody.AddForce(BeamRigidBody.transform.up * force, ForceMode.Impulse);
+                    ProgrammManagerScript.Recharging = true;
+                }
             }
         }
     }

@@ -14,11 +14,13 @@ public class ProgrammManager : MonoBehaviour
     public GameObject ScrollView;
     private GameObject SelectedObject;
     private GameObject MaketShell;
-    [SerializeField] private GameObject EndText;
+    [SerializeField]
+    private GameObject EndText;
 
-    [SerializeField] private Camera ARCamera;
+    [SerializeField]
+    private Camera ARCamera;
 
-    private Vector2 TouchPosition;
+    private Touch touch;
 
     private Quaternion YRotation;
 
@@ -41,6 +43,11 @@ public class ProgrammManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.touchCount > 0)
+        {
+            touch = Input.GetTouch(0);
+        }
+
         if (ChooseObject)
         {
             SetObject();
@@ -69,7 +76,7 @@ public class ProgrammManager : MonoBehaviour
     {
         List<ARRaycastHit> hits = new List<ARRaycastHit>();
 
-        ARRaycastManagerScript.Raycast(new Vector2(Screen.width / 2, Screen.height / 2), hits, TrackableType.Planes);
+        ARRaycastManagerScript.Raycast(touch.position, hits, TrackableType.Planes);
 
         // set object
         if (Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began)
@@ -82,82 +89,76 @@ public class ProgrammManager : MonoBehaviour
 
     void MoveObjectAndRotation()
     {
-        if (Input.touchCount > 0)
+
+        //select object
+        if (touch.phase == TouchPhase.Began)
         {
-            Touch touch = Input.GetTouch(0);
-            TouchPosition = touch.position;
+            Ray ray = ARCamera.ScreenPointToRay(touch.position);
+            RaycastHit hitObject;
 
-            //select object
-            if (touch.phase == TouchPhase.Began)
+            if (Physics.Raycast(ray, out hitObject))
             {
-                Ray ray = ARCamera.ScreenPointToRay(touch.position);
-                RaycastHit hitObject;
-
-                if (Physics.Raycast(ray, out hitObject))
+                if (hitObject.collider.CompareTag("UnSelected"))
                 {
-                    if (hitObject.collider.CompareTag("UnSelected"))
-                    {
-                        hitObject.collider.gameObject.tag = "Selected";
-                    }
+                    hitObject.collider.gameObject.tag = "Selected";
                 }
             }
+        }
 
-            SelectedObject = GameObject.FindWithTag("Selected");
+        SelectedObject = GameObject.FindWithTag("Selected");
 
-            //Rotate object with 1 finger
-            if (touch.phase == TouchPhase.Moved && Input.touchCount == 1)
+        //Rotate object with 1 finger
+        if (touch.phase == TouchPhase.Moved && Input.touchCount == 1)
+        {
+            if (Rotation)
             {
-                if (Rotation)
-                {
-                    YRotation = Quaternion.Euler(0f, -touch.deltaPosition.x * 0.1f, 0f);
-                    SelectedObject.transform.rotation = YRotation * SelectedObject.transform.rotation;
-                }
-                else //move object
-                {
-                    ARRaycastManagerScript.Raycast(TouchPosition, hits, TrackableType.Planes);
-                    SelectedObject.transform.position = hits[0].pose.position;
-                }
+                YRotation = Quaternion.Euler(0f, -touch.deltaPosition.x * 0.1f, 0f);
+                SelectedObject.transform.rotation = YRotation * SelectedObject.transform.rotation;
             }
-
-            //Rotate object with 2 fingers
-            if (Input.touchCount == 2)
+            else //move object
             {
-                Touch touch1 = Input.touches[0];
-                Touch touch2 = Input.touches[1];
-
-                if (touch1.phase == TouchPhase.Moved || touch2.phase == TouchPhase.Moved)
-                {
-                    float distanceBetweenTouches = Vector2.Distance(touch1.position, touch2.position);
-                    float prevDistanceBetweenTouches = Vector2.Distance(
-                        touch1.position - touch1.deltaPosition,
-                        touch2.position - touch2.deltaPosition
-                    );
-                    float delta = distanceBetweenTouches - prevDistanceBetweenTouches;
-
-                    if (Mathf.Abs(delta) > 0)
-                    {
-                        delta *= 0.1f;
-                    }
-                    else
-                    {
-                        distanceBetweenTouches = 0;
-                        delta = 0;
-                    }
-
-                    YRotation = Quaternion.Euler(0f, -touch1.deltaPosition.x * delta, 0f);
-                    SelectedObject.transform.rotation = YRotation * SelectedObject.transform.rotation;
-                }
+                ARRaycastManagerScript.Raycast(touch.position, hits, TrackableType.Planes);
+                SelectedObject.transform.position = hits[0].pose.position;
             }
+        }
 
-            //Deselect object
-            if (touch.phase == TouchPhase.Ended)
+        //Rotate object with 2 fingers
+        if (Input.touchCount == 2)
+        {
+            Touch touch1 = Input.touches[0];
+            Touch touch2 = Input.touches[1];
+
+            if (touch1.phase == TouchPhase.Moved || touch2.phase == TouchPhase.Moved)
             {
-                if (SelectedObject.CompareTag("Selected"))
-                {
-                    SelectedObject.tag = "UnSelected";
-                }
-            }
+                float distanceBetweenTouches = Vector2.Distance(touch1.position, touch2.position);
+                float prevDistanceBetweenTouches = Vector2.Distance(
+                    touch1.position - touch1.deltaPosition,
+                    touch2.position - touch2.deltaPosition
+                );
+                float delta = distanceBetweenTouches - prevDistanceBetweenTouches;
 
+                if (Mathf.Abs(delta) > 0)
+                {
+                    delta *= 0.1f;
+                }
+                else
+                {
+                    distanceBetweenTouches = 0;
+                    delta = 0;
+                }
+
+                YRotation = Quaternion.Euler(0f, -touch1.deltaPosition.x * delta, 0f);
+                SelectedObject.transform.rotation = YRotation * SelectedObject.transform.rotation;
+            }
+        }
+
+        //Deselect object
+        if (touch.phase == TouchPhase.Ended)
+        {
+            if (SelectedObject.CompareTag("Selected"))
+            {
+                SelectedObject.tag = "UnSelected";
+            }
         }
     }
 }

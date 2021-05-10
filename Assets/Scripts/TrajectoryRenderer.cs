@@ -5,7 +5,8 @@ using UnityEngine;
 public class TrajectoryRenderer : MonoBehaviour
 {
     private LineRenderer LineRendererComponent;
-    [SerializeField] private GameObject Catapult;
+    [SerializeField]
+    private GameObject Catapult;
 
     // Start is called before the first frame update
     void Start()
@@ -21,23 +22,26 @@ public class TrajectoryRenderer : MonoBehaviour
 
     public void ShowTrajectory(Vector3 origin, Vector3 speed)
     {
-        Vector3[] points = new Vector3[100];
-
-        LineRendererComponent.positionCount = points.Length;
-
-        for(int i = 0; i < points.Length; i++)
+        if (Catapult)
         {
-            float time = i * 0.1f;
+            Vector3[] points = new Vector3[100];
 
-            points[i] = origin + speed * time + Physics.gravity * time * time / 2;
+            LineRendererComponent.positionCount = points.Length;
 
-            if (points[i].y < Catapult.gameObject.transform.position.y - 1)
+            for (int i = 0; i < points.Length; i++)
             {
-                LineRendererComponent.positionCount = i;
-                break;
-            }
-        }
+                float time = i * 0.1f;
 
-        LineRendererComponent.SetPositions(points);
+                points[i] = origin + speed * time + Physics.gravity * time * time / 2;
+
+                if (points[i].y < Catapult.gameObject.transform.position.y - 1)
+                {
+                    LineRendererComponent.positionCount = i;
+                    break;
+                }
+            }
+
+            LineRendererComponent.SetPositions(points);
+        }
     }
 }

@@ -224,7 +224,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShellPrefab: {fileID: 158866935941200836, guid: ead6905fc38a44543ae574266b5d87cc,
     type: 3}
-  speed: {x: 0, y: 0, z: 0}
   ThrowSound: {fileID: 8300000, guid: 672192ccba7967f41b72d582cc64ee61, type: 3}
 --- !u!82 &4955453
 AudioSource:
@@ -820,7 +819,7 @@ HingeJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 1.776357e-17, y: -7.216451e-18, z: 0.007500003}
+  m_ConnectedAnchor: {x: 1.776357e-17, y: -7.216451e-18, z: 0.0075000003}
   m_UseSpring: 0
   m_Spring:
     spring: 0
